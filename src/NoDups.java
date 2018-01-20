@@ -74,24 +74,20 @@ public class NoDups {
      */
 
     public static <T> ArrayList<T> noDupsTime(Comparator<T> cmp, ArrayList<T> l) {
-        ArrayList<T> result = new ArrayList<>(){{add(null); add(null);}};
-        T max = l.get(0);
+        ArrayList<T> result = new ArrayList<>();
 
         for (T o:l){
-            if (cmp.compare(max, o) < 0){
-                max=o;
-            }
             result.add(null);
         }
 
         for (T o: l){
 
-            result.add(cmp.compare(max, o), o);
-            result.remove(cmp.compare(max, o)+1);
+            result.set(l.indexOf(o), o);
         }
         while(result.remove(null));
 
-        result.sort((o1, o2) -> l.indexOf(o1) - l.indexOf(o2));
+       result.sort((o1, o2) -> l.indexOf(o1) - l.indexOf(o2));
+
 
         return result;
     }
