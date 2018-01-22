@@ -10,6 +10,13 @@ public class NoDups {
             return o1 - o2;
         }
     };
+
+    private static Comparator<Integer> c1 = (o1, o2) -> {
+        if (o1 > o2) return 1;
+        else if (o1 < o2) return -1;
+            else return 0;
+    };
+
     private static ArrayList<Integer> iary = new ArrayList<>() {{
         add(8);
         add(1);
@@ -26,6 +33,7 @@ public class NoDups {
         System.out.println(noDups(c, iary).toString());
         System.out.println(noDupsTime(c, iary).toString());
         System.out.println(noDupsTime1(c, iary).toString());
+        System.out.println(noDupsTime1(c1, iary).toString());
     }
 
     /**
@@ -63,6 +71,11 @@ public class NoDups {
     }
 
     /*
+    Diese Methode sollte eigentlich eine Lösung sein, die sowohl Laufzeit, als auch Reihenfolge breücksichtigt.
+    Leider verwendet sie den gegebenen Comparator nicht, was sie natürlich für die gestellte Aufgabe ungeeignet macht.
+    Ich lasse den originalen Kommentar trotzdem stehen.
+
+
     Nach einiger Überarbeitung ist nun diese Methode eine,
     welche dasselbe Ergebnis wie noDups liefert, jedoch nur eine Laufzeit von O(n*log(n)) benötigt.
     Dies ergiebt sich wie folgt:
@@ -87,27 +100,33 @@ public class NoDups {
         }
         while(result.remove(null));
 
-       result.sort((o1, o2) -> l.indexOf(o1) - l.indexOf(o2));
+       result.sort(Comparator.comparingInt(o1 -> l.indexOf(o1)));
 
 
         return result;
     }
+    /*
+    Nun zur endgültigen Methode. Obwohl hier gleich 2 mal sortiert wird ist die Laufzeit besser als n^2.
+    Da die sort methode der ArrayList eine Optimierung des merge sort algorithm ist hat sie eine Laufzeit von O(n*log(n)).
+    Die for-schleife benötigt O(n) zugriffe. Wir können also ohne Beschränkung der Allgemeinheit annehmen, dass die Laufzeit dieser Methode
+    2*n*log(n)+n element O(n*log(n))
+    ist.
+     */
 
     public static <T> ArrayList<T> noDupsTime1(Comparator<T> cmp, ArrayList<T> l) {
         ArrayList<T> result = new ArrayList<>();
         ArrayList<T> original = new ArrayList<>(l);
 
-        l.sort(cmp);
-        result.add(l.get(0));
+        original.sort(cmp);
+        result.add(original.get(0));
 
-        for (int i = 1; i < l.size() ; i++) {
-            if (cmp.compare(l.get(i-1), l.get(i)) != 0){
-                result.add(l.get(i));
+        for (int i = 1; i < original.size() ; i++) {
+            if (cmp.compare(original.get(i-1), original.get(i)) != 0){
+                result.add(original.get(i));
             }
         }
 
-        result.sort((o1, o2) -> original.indexOf(o1) - original.indexOf(o2));
-
+        result.sort(Comparator.comparingInt(o1 -> l.indexOf(o1)));
 
         return result;
     }
