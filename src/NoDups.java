@@ -25,10 +25,11 @@ public class NoDups {
         System.out.println(iary.toString());
         System.out.println(noDups(c, iary).toString());
         System.out.println(noDupsTime(c, iary).toString());
+        System.out.println(noDupsTime1(c, iary).toString());
     }
 
     /**
-     * Bitte beachten sie bei der Korrektur: Die Methode noDupsTime ist die endgültiige Methode.
+     * Bitte beachten sie bei der Korrektur: Die Methode noDupsTime1 ist die endgültiige Methode.
      * Diese ist für ein eventuelles Nachvollziehen des Denkvorgangs meinerseits. Vielen Dank!
      *
      * Laufzeitanalyse dieser Methode: O(n^2), da: Im schlechtesten Fall (keine Duplikate):
@@ -87,6 +88,25 @@ public class NoDups {
         while(result.remove(null));
 
        result.sort((o1, o2) -> l.indexOf(o1) - l.indexOf(o2));
+
+
+        return result;
+    }
+
+    public static <T> ArrayList<T> noDupsTime1(Comparator<T> cmp, ArrayList<T> l) {
+        ArrayList<T> result = new ArrayList<>();
+        ArrayList<T> original = new ArrayList<>(l);
+
+        l.sort(cmp);
+        result.add(l.get(0));
+
+        for (int i = 1; i < l.size() ; i++) {
+            if (cmp.compare(l.get(i-1), l.get(i)) != 0){
+                result.add(l.get(i));
+            }
+        }
+
+        result.sort((o1, o2) -> original.indexOf(o1) - original.indexOf(o2));
 
 
         return result;
